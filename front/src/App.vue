@@ -1,32 +1,31 @@
 <template>
-  <div className="reg_div">
+  <div class="reg_div">
     <input type="text" v-model="user_name" placeholder="Имя">
     <input type="password" v-model="user_password" placeholder="Пароль">
     <input type="email" v-model="user_email" placeholder="Email">
     <button @click="add_user">Отправить</button>
   </div>
 
-  <div v-if="users.length == 0" className='new_users'>
+  <div v-if="users.length == 0" class='new_users'>
     <p>Пользователи не найдены</p>
   </div>
-  <div v-else-if="users.length == 5" className='new_users'>
+  <div v-else-if="users.length == 5" class='new_users'>
     <p>Превышен лимит пользователей</p>
   </div>
-  <div v-else className='new_users'>
+  <div v-else class='new_users'>
     <p>Все условия не верны, работает v-else</p>
   </div>
 
-  <div className='new_users' v-for="(user, user_id) in users" :key="user_id">
-    <p id="user_name">{{user.name}}</p>
-    <p id="user_password">{{user.password}}</p>
-    <p id="user_email">{{user.email}}</p>
-  </div>
+  <UserItems v-for="(user, user_id) in users" :key="user_id" :user="user" :user_id="user_id" :delete_user="delete_user"/>
 
 </template>
 
 <script>
 
+import UserItems from './components/UserItems.vue'
+
 export default {
+  components: { UserItems },
   data() {
     return {
       users: [],
@@ -37,7 +36,7 @@ export default {
   },
   methods: {
     add_user() {
-      if (this.user_name == '' | this.user_password == '' | this.user_email == '') {
+      if (this.user_name == '' || this.user_password == '' || this.user_email == '') {
         window.alert('Заполните все поля')
         return
       }
@@ -46,6 +45,9 @@ export default {
         password: this.user_password,
         email: this.user_email,
       })
+    },
+    delete_user(user_id) {
+      this.users.splice(user_id, 1)
     }
   }
 }
